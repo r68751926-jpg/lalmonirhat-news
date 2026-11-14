@@ -1,0 +1,47 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+  functions = "netlify/functions"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+
+# Server-Side Open Graph metadata injection for Facebook/WhatsApp/X crawlers & article routes
+[[redirects]]
+  from = "/news/*"
+  to = "/.netlify/functions/og-meta?slug=:splat"
+  status = 200
+  force = true
+
+# Dynamic XML sitemaps and robots.txt
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "/.netlify/functions/sitemap?type=sitemap"
+  status = 200
+
+[[redirects]]
+  from = "/news-sitemap.xml"
+  to = "/.netlify/functions/sitemap?type=news"
+  status = 200
+
+[[redirects]]
+  from = "/robots.txt"
+  to = "/.netlify/functions/sitemap?type=robots"
+  status = 200
+
+# API proxy to Netlify Serverless Functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+# SPA fallback for all client routes (/admin, /category/*, /page/*, /search)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["dist/**"]
